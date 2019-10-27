@@ -4,6 +4,9 @@ ARG ENVIRONMENT=development
 ENV ENVIRONMENT=${ENVIRONMENT}
 WORKDIR /powerdns-admin
 
+RUN  sed -i s@/archive.ubuntu.com/@/mirrors.aliyun.com/@g /etc/apt/sources.list
+RUN  apt-get clean
+
 RUN apt-get update -y
 RUN apt-get install -y apt-transport-https
 
@@ -38,7 +41,7 @@ RUN apt-get install -y libsasl2-dev libldap2-dev libssl-dev
 RUN apt-get install -y libxml2-dev libxslt1-dev libxmlsec1-dev libffi-dev pkg-config
 
 COPY ./requirements.txt /powerdns-admin/requirements.txt
-RUN pip3 install -r requirements.txt
+RUN pip3 install -r requirements.txt -i https://pypi.tuna.tsinghua.edu.cn/simple some-package
 
 ADD ./supervisord.conf /etc/supervisord.conf
 ADD . /powerdns-admin/
